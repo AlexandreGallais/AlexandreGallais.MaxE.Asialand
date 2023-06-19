@@ -1,0 +1,10 @@
+.asialand-ext-li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-left: 12px;
+}
+
+.asialand-ext-li input {
+    width: 100%;
+}

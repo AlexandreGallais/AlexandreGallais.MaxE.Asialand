@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "asialand.fr - marge",
+  "description": "Calcul de marge sur le site asialand.fr.",
+  "version": "1.0.0",
+
+  "author": "Alexandre Gallais",
+
+  "permissions": ["storage"],
+
+  "content_scripts": [
+    {
+      "matches": ["https://*.asialand.fr/*"],
+      "js": ["asialand-ext-script.js"],
+      "css": ["asialand-ext-style.css"]
+    }
+  ]
+}
