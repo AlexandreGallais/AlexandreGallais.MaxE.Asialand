@@ -84,7 +84,7 @@ const populatePriceArray = () => {
 };
 
 const inputChange = (event) => {
-    chrome.storage.sync.set({ [variable.key]: JSON.stringify({
+    chrome.storage.local.set({ [variable.key]: JSON.stringify({
         tva: event.target.name === "tva" ? Number(event.target.value) : variable.tva,
         profit: event.target.name === "profit" ? Number(event.target.value) : variable.profit,
         active: event.target.name === "active" ? event.target.checked : variable.active,
@@ -233,16 +233,16 @@ const run = () => {
 
 
 window.addEventListener("load", () => {
-    chrome.storage.sync.get().then((result) => {
-        const obj = JSON.parse(result[variable.key]);
+    chrome.storage.local.get(variable.key, (res) => {
+        let obj = {};
 
-        if (!obj) {
-            return;
+        if (res[variable.key]) {
+            obj = JSON.parse(res[variable.key]);
         }
 
-        variable.tva = obj.tva;
-        variable.profit = obj.profit;
-        variable.active = obj.active;
+        if (obj.tva) variable.tva = obj.tva;
+        if (obj.profit) variable.profit = obj.profit;
+        if (obj.active) variable.active = obj.active;
 
         run();
     });
