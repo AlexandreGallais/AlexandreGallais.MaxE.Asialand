@@ -28,11 +28,13 @@ class PriceEl {
 
         let price = defaultPrice;
 
-        price = price * variable.profit;
+        price = price * variable.profit; // Option A
 
         if (this.#tva) {
             price = price * variable.tva;
         }
+
+        // price = price + ((defaultPrice * variable.profit) - defaultPrice); // Option B
 
         price = price.toFixed(2);
 
@@ -169,12 +171,32 @@ const run = () => {
     const sideCartEl = document.querySelector("#js-cart-sidebar");
 
     if (sideCartEl) {
+        const fn = () => {
+            sideCartEl.querySelectorAll(".cart-product-line").forEach(x => {
+                /** @type {HTMLElement} */
+                const productPriceEl = x.querySelector(".product-price");
+
+                console.log(productPriceEl);
+
+                if (!productPriceEl) {
+                    return;
+                }
+
+                productPriceEl.style.visibility = "hidden";
+                productPriceEl.style.width = "0";
+            });
+
+            sideCartEl.querySelectorAll(".cart-subtotals").forEach(x => {
+                x.style.visibility = "hidden";
+                x.style.height = "0";
+            });
+        };
+
         const sideCartTotalEl = document.querySelector("#js-cart-sidebar .price-total");
 
         if (sideCartTotalEl) {
             priceSideCart = new PriceEl(document.querySelector("#js-cart-sidebar .price-total"));
         }
-
         
         const cartSideObs = new MutationObserver(() => {
             cartSideObs.disconnect();
@@ -185,8 +207,12 @@ const run = () => {
                 priceSideCart = new PriceEl(sideCartTotalEl);
             }
 
+            fn();
+
             cartSideObs.observe(sideCartEl, { childList: true });
         });
+
+        fn();
 
         cartSideObs.observe(sideCartEl, { childList: true });
     }
@@ -225,6 +251,25 @@ const run = () => {
         });
 
         cartObs.observe(cartSumEl, { childList: true });
+    }
+
+    // Header cart button
+    const cartModuleEl = document.querySelector(".shopping-cart-module .blockcart.cart-preview");
+
+    if (cartModuleEl) {
+        const fn = () => {
+            cartModuleEl.querySelectorAll(".cart-total-value").forEach(x => {
+                x.style.visibility = "hidden";
+            })
+        };
+
+        fn();
+
+        const cartObs = new MutationObserver(() => {
+            fn();
+        });
+
+        cartObs.observe(cartModuleEl, { childList: true });
     }
 };
 
